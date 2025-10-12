@@ -1,0 +1,25 @@
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  train_file: "smiles_train.txt"
+  vocab_file: "vocab.txt"
+
+model:
+  num_layers: 3
+  dropout: 0.1
+
+training:
+
+  epochs: 200
+  batch_size: 32
+  learning_rate: 0.001
+  checkpoint_dir: "checkpoints"
+  latent_dim: 128
+  hidden_dim: 256
+  device: "cpu"   
+  lr: 0.001
+
+sampling:
+  num_samples: 500
+  max_len: 100   
+  temp : 0.8

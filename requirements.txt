@@ -1,0 +1,10 @@
+torch>=1.13
+torchvision
+numpy
+pandas
+rdkit-pypi
+selfies
+tqdm
+pyyaml
+scikit-learn
+matplotlib
