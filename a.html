@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GenBind - AI Molecular Discovery Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #3b82f6;
+  --primary-dark: #1e40af;
+  --primary-light: #60a5fa;
+  --secondary: #8b5cf6;
+  --accent: #06b6d4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --dark-bg: #0f172a;
+  --dark-card: #1e293b;
+  --dark-border: #334155;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --glass-bg: rgba(30, 41, 59, 0.8);
+  --glass-border: rgba(148, 163, 184, 0.1);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body, html { 
+  height: 100%; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* Animated Background */
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(-45deg, #0f172a, #1e293b, #334155, #475569);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: float 20s infinite linear;
+  opacity: 0.3;
+}
+
+@keyframes float {
+  from {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.3; }
+  to {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Loading Screen */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--dark-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.dna-loader {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.dna-strand {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  animation: dnaRotate 2s linear infinite;
+}
+
+.dna-strand:nth-child(1) {
+  border-top-color: var(--primary);
+  animation-delay: 0s;
+}
+
+.dna-strand:nth-child(2) {
+  border-right-color: var(--secondary);
+  animation-delay: -0.5s;
+}
+
+.dna-strand:nth-child(3) {
+  border-bottom-color: var(--accent);
+  animation-delay: -1s;
+}
+
+.dna-strand:nth-child(4) {
+  border-left-color: var(--success);
+  animation-delay: -1.5s;
+}
+
+@keyframes dnaRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.loading-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Enhanced Login Container */
+#login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background: rgba(15, 23, 42, 0.8);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  width: 420px;
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transform: translateY(20px);
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+  }
+}
+
+.login-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.login-panel h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 400;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-group i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.login-panel input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.login-panel input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.login-panel input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.login-panel input:focus + i {
+  color: var(--primary);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.login-btn:hover::before {
+  left: 100%;
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.4);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.login-btn .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffffff30;
+  border-top: 2px solid #ffffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#error-msg {
+  color: var(--danger);
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+#error-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced Header */
+.header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 900;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: left 0.3s ease;
+  z-index: -1;
+  border-radius: 8px;
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+  left: 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: white;
+  transform: translateY(-2px);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.notification-btn {
+  position: relative;
+  padding: 0.5rem;
+  border: none;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.notification-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  transform: translateY(-2px);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: var(--danger);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+}
+
+/* Enhanced Info Bar */
+.info-bar {
+  background: var(--gradient-accent);
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: slideInfo 4s infinite;
+}
+
+@keyframes slideInfo {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Enhanced Main Container */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Enhanced Home Page */
+.hero-section {
+  text-align: center;
+  padding: 4rem 0;
+  position: relative;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.feature-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-xl);
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.feature-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.feature-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Enhanced File Upload */
+.upload-section {
+  margin: 3rem 0;
+}
+
+.upload-zone {
+  border: 3px dashed var(--dark-border);
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-zone.dragover {
+  border-color: var(--primary);
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.02);
+}
+
+.upload-zone::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.upload-zone:hover::before {
+  left: 100%;
+}
+
+.upload-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.upload-zone:hover .upload-icon {
+  transform: scale(1.1);
+}
+
+.upload-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.upload-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-btn {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Enhanced Generate Button */
+.generate-section {
+  text-align: center;
+  margin: 3rem 0;
+}
+
+.generate-btn {
+  background: var(--gradient-secondary);
+  color: white;
+  border: none;
+  padding: 1.5rem 3rem;
+  border-radius: 16px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  min-width: 250px;
+}
+
+.generate-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.generate-btn:hover::before {
+  left: 100%;
+}
+
+.generate-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 25px 50px -12px rgba(245, 101, 101, 0.4);
+}
+
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.generate-btn.loading {
+  pointer-events: none;
+}
+
+/* Enhanced Molecule List */
+.molecule-section {
+  margin: 3rem 0;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 1rem;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+}
+
+.molecule-grid {
+  display: grid;
+  gap: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.molecule-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.molecule-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.molecule-card:hover::before,
+.molecule-card.selected::before {
+  transform: scaleX(1);
+}
+
+.molecule-card:hover,
+.molecule-card.selected {
+  border-color: var(--primary);
+  transform: translateX(10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.molecule-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.molecule-smiles {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.binding-score {
+  background: var(--gradient-accent);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.binding-score.good {
+  background: var(--gradient-primary);
+}
+
+.binding-score.excellent {
+  background: var(--success);
+}
+
+/* Enhanced Viewer */
+.viewer-section {
+  margin: 3rem 0;
+}
+
+.viewer-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.viewer-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.viewer-icon {
+  width: 100px;
+  height: 100px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  opacity: 0.7;
+}
+
+/* Enhanced Team Cards */
+.team-section {
+  margin: 3rem 0;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.team-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.team-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-secondary);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover::before {
+  transform: scaleX(1);
+}
+
+.team-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-xl);
+}
+
+.team-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: white;
+  border: 4px solid rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.team-card:hover .team-avatar {
+  transform: scale(1.1);
+  border-color: var(--primary);
+}
+
+.team-name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.team-role {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.team-info {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.team-info p {
+  margin-bottom: 0.5rem;
+  color: var(--text-secondary);
+}
+
+.team-info strong {
+  color: var(--text-primary);
+}
+
+.team-info a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.team-info a:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+.file-upload-section {
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.5rem;
+}
+
+.file-upload-label {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.team-file-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.team-file-input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+/* Enhanced Contact Form */
+.contact-section {
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0;
+}
+
+.contact-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 3rem;
+  width: 500px;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.contact-title {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 2rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group i {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  color: var(--text-muted);
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.form-input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.5);
+  backdrop-filter: blur(10px);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  font-family: inherit;
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.form-input:focus + i {
+  color: var(--primary);
+}
+
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-lg);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.4);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .login-panel {
+    width: 90%;
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .nav-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .contact-card {
+    width: 90%;
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.6s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Success/Error States */
+.success-state {
+  background: var(--success);
+  color: white;
+}
+
+.error-state {
+  background: var(--danger);
+  color: white;
+}
+
+.warning-state {
+  background: var(--warning);
+  color: white;
+}
+
+/* Progress Indicators */
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--dark-border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+</style>
+</head>
+
+<body>
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="dna-loader">
+    <div class="dna-strand"></div>
+    <div class="dna-strand"></div>
+    <div class="dna-strand"></div>
+    <div class="dna-strand"></div>
+  </div>
+  <div class="loading-text">Initializing GenBind</div>
+  <div style="color: var(--text-secondary); font-size: 0.9rem;">AI-Powered Molecular Discovery Platform</div>
+</div>
+
+<!-- Animated Background -->
+<div class="animated-bg"></div>
+
+<!-- Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Login Container -->
+<div id="login-container">
+  <div class="login-panel">
+    <h2>GenBind</h2>
+    <p class="login-subtitle">AI-Powered Molecular Discovery Platform</p>
+    
+    <form id="login-form" onsubmit="return false;">
+      <div class="input-group">
+        <input id="username" type="text" placeholder="Username" required autocomplete="off">
+        <i class="fas fa-user"></i>
+      </div>
+      
+      <div class="input-group">
+        <input id="password" type="password" placeholder="Password" required autocomplete="off">
+        <i class="fas fa-lock"></i>
+      </div>
+      
+      <button id="login-btn" class="login-btn" type="button">
+        <span class="btn-text">Access Platform</span>
+      </button>
+    </form>
+    
+    <div id="error-msg" role="alert"></div>
+  </div>
+</div>
+
+<!-- Main Portal -->
+<div id="main-portal" style="display: none;">
+  <!-- Enhanced Header -->
+  <header class="header">
+    <div class="nav-container">
+      <a href="#" class="logo">GenBind</a>
+      
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+          <li><a href="#" class="nav-link" data-page="about"><i class="fas fa-users"></i> About</a></li>
+          <li><a href="#" class="nav-link" data-page="info"><i class="fas fa-info-circle"></i> Info</a></li>
+          <li><a href="#" class="nav-link" data-page="download"><i class="fas fa-download"></i> Download</a></li>
+          <li><a href="#" class="nav-link" data-page="webservices"><i class="fas fa-code"></i> API</a></li>
+          <li><a href="#" class="nav-link" data-page="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+      </nav>
+      
+      <div class="user-menu">
+        <button class="notification-btn tooltip">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">3</span>
+          <span class="tooltip-text">Notifications</span>
+        </button>
+        <div class="user-avatar tooltip">
+          <i class="fas fa-user"></i>
+          <span class="tooltip-text">Profile</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Info Bar -->
+  <div class="info-bar">
+    <i class="fas fa-atom"></i>
+    The first public AI-powered molecular binding explorer and data portal for drug discovery and biotechnology research.
+  </div>
+
+  <!-- Main Container -->
+  <main class="container">
+    <div id="main-section-content"></div>
+  </main>
+</div>
+
+<script>
+// Enhanced JavaScript with modern features
+class GenBindApp {
+  constructor() {
+    this.validUser = "admin";
+    this.validPass = "Password123";
+    this.currentSection = "home";
+    this.generatedMolecules = [];
+    this.selectedMoleculeIndex = null;
+    
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.createFloatingParticles();
+    this.setupEventListeners();
+    this.handleInitialLoad();
+  }
+
+  createFloatingParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 20 + 's';
+      particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+      particlesContainer.appendChild(particle);
+    }
+  }
+
+  setupEventListeners() {
+    // Login functionality
+    document.getElementById('login-btn').addEventListener('click', () => this.handleLogin());
+    
+    // Navigation links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.getAttribute('data-page');
+        this.loadSection(page);
+        this.updateActiveNav(link);
+      });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.activeElement.id === 'password') {
+        this.handleLogin();
+      }
+    });
+  }
+
+  handleInitialLoad() {
+    // Show loading screen
+    setTimeout(() => {
+      const loadingScreen = document.getElementById('loadingScreen');
+      loadingScreen.classList.add('fade-out');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 800);
+    }, 2000);
+  }
+
+  async handleLogin() {
+    const loginBtn = document.getElementById('login-btn');
+    const errorMsg = document.getElementById('error-msg');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Add loading state
+    loginBtn.classList.add('loading');
+    loginBtn.innerHTML = '<span class="spinner"></span>Authenticating...';
+
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    if (username === this.validUser && password === this.validPass) {
+      // Success
+      errorMsg.classList.remove('show');
+      this.showMainPortal();
+    } else {
+      // Error
+      loginBtn.classList.remove('loading');
+      loginBtn.innerHTML = '<span class="btn-text">Access Platform</span>';
+      errorMsg.textContent = "Invalid credentials. Please check your username and password.";
+      errorMsg.classList.add('show');
+      
+      // Shake animation
+      document.querySelector('.login-panel').style.animation = 'shake 0.5s';
+      setTimeout(() => {
+        document.querySelector('.login-panel').style.animation = '';
+      }, 500);
+    }
+  }
+
+  showMainPortal() {
+    const loginContainer = document.getElementById('login-container');
+    const mainPortal = document.getElementById('main-portal');
+
+    loginContainer.style.transform = 'scale(0.8)';
+    loginContainer.style.opacity = '0';
+    
+    setTimeout(() => {
+      loginContainer.style.display = 'none';
+      mainPortal.style.display = 'block';
+      this.loadSection('home');
+    }, 600);
+  }
+
+  updateActiveNav(activeLink) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    activeLink.classList.add('active');
+  }
+
+  loadSection(section) {
+    this.currentSection = section;
+    const content = document.getElementById('main-section-content');
+    
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(20px)';
+
+    setTimeout(() => {
+      switch(section) {
+        case 'home':
+          this.renderHomePage();
+          break;
+        case 'about':
+          this.renderAboutPage();
+          break;
+        case 'info':
+          this.renderInfoPage();
+          break;
+        case 'download':
+          this.renderDownloadPage();
+          break;
+        case 'webservices':
+          this.renderWebServicesPage();
+          break;
+        case 'contact':
+          this.renderContactPage();
+          break;
+        default:
+          this.renderHomePage();
+      }
+
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }, 300);
+  }
+
+  renderHomePage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <section class="hero-section">
+          <h1 class="hero-title">GenBind</h1>
+          <p class="hero-subtitle">Revolutionary AI-Powered Molecular Generation & Protein Binding Explorer</p>
+          
+          <div class="feature-grid">
+            <div class="feature-card scale-in">
+              <div class="feature-icon">
+                <i class="fas fa-atom"></i>
+              </div>
+              <h3 class="feature-title">Molecular Generation</h3>
+              <p class="feature-description">Advanced AI algorithms generate novel molecular structures with optimal binding properties</p>
+            </div>
+            
+            <div class="feature-card scale-in" style="animation-delay: 0.2s">
+              <div class="feature-icon">
+                <i class="fas fa-dna"></i>
+              </div>
+              <h3 class="feature-title">Protein Binding</h3>
+              <p class="feature-description">Predict and analyze molecular binding affinities with unprecedented accuracy</p>
+            </div>
+            
+            <div class="feature-card scale-in" style="animation-delay: 0.4s">
+              <div class="feature-icon">
+                <i class="fas fa-brain"></i>
+              </div>
+              <h3 class="feature-title">AI-Powered</h3>
+              <p class="feature-description">Leverage cutting-edge machine learning for drug discovery and biotechnology research</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="glass-card">
+          <div class="upload-section">
+            <h2 class="section-title">Protein Target Upload</h2>
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+              </div>
+              <h3 class="upload-title">Upload Protein Structure</h3>
+              <p class="upload-subtitle">Drag & drop your PDB file or click to browse</p>
+              <input type="file" id="protein-upload" class="file-input" accept=".pdb">
+              <button type="button" class="upload-btn" onclick="document.getElementById('protein-upload').click()">
+                <i class="fas fa-folder-open"></i> Choose File
+              </button>
+            </div>
+            <div id="file-info" style="margin-top: 1rem; text-align: center; color: var(--success); font-weight: 600;"></div>
+          </div>
+
+          <div class="generate-section">
+            <button id="generate-btn" class="generate-btn" disabled>
+              <i class="fas fa-magic"></i>
+              <span class="btn-text">Generate Molecules & Dock</span>
+            </button>
+            <div class="progress-bar" id="progress-bar" style="display: none;">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="molecule-section">
+            <h2 class="section-title">Generated Molecules</h2>
+            <div class="molecule-grid" id="molecule-list">
+              <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                <i class="fas fa-flask" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+                <p>No molecules generated yet. Upload a protein target to begin.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="viewer-section">
+            <h2 class="section-title">3D Molecular Viewer</h2>
+            <div class="viewer-container" id="viewer-container">
+              <div class="viewer-placeholder">
+                <div class="viewer-icon">
+                  <i class="fas fa-cube"></i>
+                </div>
+                <p>3D visualization will appear here after molecular generation</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.setupHomePageFunctionality();
+  }
+
+  setupHomePageFunctionality() {
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('protein-upload');
+    const generateBtn = document.getElementById('generate-btn');
+    const fileInfo = document.getElementById('file-info');
+
+    // Drag and drop functionality
+    uploadZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].name.endsWith('.pdb')) {
+        this.handleFileUpload(files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        this.handleFileUpload(e.target.files[0]);
+      }
+    });
+
+    generateBtn.addEventListener('click', () => {
+      this.generateMolecules();
+    });
+  }
+
+  handleFileUpload(file) {
+    const fileInfo = document.getElementById('file-info');
+    const generateBtn = document.getElementById('generate-btn');
+    
+    fileInfo.innerHTML = `<i class="fas fa-check-circle"></i> ${file.name} uploaded successfully (${(file.size / 1024).toFixed(1)} KB)`;
+    generateBtn.disabled = false;
+    generateBtn.classList.add('success-state');
+    
+    // Reset molecule list
+    document.getElementById('molecule-list').innerHTML = `
+      <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+        <i class="fas fa-flask" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+        <p>Ready to generate molecules. Click the generate button above.</p>
+      </div>
+    `;
+  }
+
+  async generateMolecules() {
+    const generateBtn = document.getElementById('generate-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const progressFill = document.getElementById('progress-fill');
+    const moleculeList = document.getElementById('molecule-list');
+
+    // Start generation
+    generateBtn.classList.add('loading');
+    generateBtn.innerHTML = '<span class="spinner"></span><span class="btn-text">Generating...</span>';
+    generateBtn.disabled = true;
+    
+    progressBar.style.display = 'block';
+
+    // Simulate progress
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 90) progress = 90;
+      progressFill.style.width = progress + '%';
+    }, 200);
+
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // Complete progress
+    clearInterval(progressInterval);
+    progressFill.style.width = '100%';
+
+    // Generate mock data
+    this.generatedMolecules = [
+      { id: 'mol1', smiles: 'CCO', bindingScore: -7.5, properties: { mw: 46.07, logP: -0.31 } },
+      { id: 'mol2', smiles: 'CCN', bindingScore: -8.2, properties: { mw: 45.08, logP: -0.16 } },
+      { id: 'mol3', smiles: 'CCC', bindingScore: -6.9, properties: { mw: 44.10, logP: 1.09 } },
+      { id: 'mol4', smiles: 'CCCC', bindingScore: -7.8, properties: { mw: 58.12, logP: 1.81 } },
+      { id: 'mol5', smiles: 'CC(C)O', bindingScore: -8.5, properties: { mw: 60.10, logP: 0.05 } }
+    ];
+
+    this.selectedMoleculeIndex = 0;
+    this.renderMoleculeList();
+    this.updateViewer();
+
+    // Reset button
+    setTimeout(() => {
+      generateBtn.classList.remove('loading', 'success-state');
+      generateBtn.innerHTML = '<i class="fas fa-magic"></i><span class="btn-text">Generate New Batch</span>';
+      generateBtn.disabled = false;
+      progressBar.style.display = 'none';
+      progressFill.style.width = '0%';
+    }, 1000);
+  }
+
+  renderMoleculeList() {
+    const moleculeList = document.getElementById('molecule-list');
+    
+    if (this.generatedMolecules.length === 0) {
+      moleculeList.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 2rem;">
+          <i class="fas fa-flask" style="font-size: 3rem; opacity: 0.5; margin-bottom: 1rem;"></i>
+          <p>No molecules generated yet. Upload a protein target to begin.</p>
+        </div>
+      `;
+      return;
+    }
+
+    moleculeList.innerHTML = this.generatedMolecules.map((molecule, index) => {
+      const scoreClass = molecule.bindingScore <= -8 ? 'excellent' : 
+                        molecule.bindingScore <= -7 ? 'good' : '';
+      
+      return `
+        <div class="molecule-card ${index === this.selectedMoleculeIndex ? 'selected' : ''}" 
+             data-index="${index}">
+          <div class="molecule-info">
+            <div>
+              <div class="molecule-smiles">${molecule.smiles}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">
+                MW: ${molecule.properties.mw} | LogP: ${molecule.properties.logP}
+              </div>
+            </div>
+            <div class="binding-score ${scoreClass}">
+              ${molecule.bindingScore.toFixed(1)}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Add click handlers
+    moleculeList.querySelectorAll('.molecule-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.dataset.index);
+        this.selectedMoleculeIndex = index;
+        this.renderMoleculeList();
+        this.updateViewer();
+      });
+    });
+  }
+
+  updateViewer() {
+    const viewerContainer = document.getElementById('viewer-container');
+    
+    if (this.generatedMolecules.length === 0 || this.selectedMoleculeIndex === null) {
+      viewerContainer.innerHTML = `
+        <div class="viewer-placeholder">
+          <div class="viewer-icon">
+            <i class="fas fa-cube"></i>
+          </div>
+          <p>3D visualization will appear here after molecular generation</p>
+        </div>
+      `;
+      return;
+    }
+
+    const molecule = this.generatedMolecules[this.selectedMoleculeIndex];
+    
+    viewerContainer.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--primary);">
+          3D Structure Viewer
+        </div>
+        <div style="background: var(--glass-bg); border-radius: 12px; padding: 2rem; margin-bottom: 1rem;">
+          <div style="font-size: 3rem; color: var(--accent); margin-bottom: 1rem;">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; font-weight: 600;">
+            ${molecule.smiles}
+          </div>
+          <div style="color: var(--text-muted); margin-top: 0.5rem;">
+            Binding Score: <span style="color: var(--success); font-weight: 700;">${molecule.bindingScore.toFixed(2)}</span>
+          </div>
+        </div>
+        <div style="color: var(--text-secondary); font-size: 0.9rem;">
+          Integrate 3Dmol.js or similar library for real-time 3D molecular visualization
+        </div>
+      </div>
+    `;
+  }
+
+  renderAboutPage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card">
+          <h1 class="section-title">About GenBind</h1>
+          <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 2rem; color: var(--text-secondary);">
+            GenBind is built to accelerate computational biology and chemistry, offering easy access to molecular datasets, 
+            tools, and integration for AI model research. Our platform combines cutting-edge artificial intelligence with 
+            deep domain expertise to revolutionize drug discovery and molecular design.
+          </p>
+          
+          <div style="text-align: center; padding: 2rem; background: var(--gradient-primary); border-radius: 16px; margin-bottom: 3rem;">
+            <h3 style="color: white; font-size: 1.5rem; font-weight: 700;">Developed by research teams for scientists and students</h3>
+          </div>
+        </div>
+
+        <div class="team-section">
+          <h2 class="section-title">Our Team</h2>
+          <div class="team-grid">
+            <div class="team-card scale-in">
+              <div class="team-avatar">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+              <h3 class="team-name">Atharv Bhaleghare</h3>
+              <p class="team-role">AI&DS Engineer</p>
+              <div class="team-info">
+                <p><strong>Phone:</strong> 9322617537</p>
+                <p><strong>Email:</strong> <a href="mailto:atharvbhaleghare@gmail.com">atharvbhaleghare@gmail.com</a></p>
+                <p><strong>Specialization:</strong> Machine Learning & Molecular Modeling</p>
+              </div>
+              <div class="file-upload-section">
+                <label class="file-upload-label">Upload Profile Photo:</label>
+                <input type="file" accept="image/*" class="team-file-input" />
+              </div>
+            </div>
+
+            <div class="team-card scale-in" style="animation-delay: 0.2s">
+              <div class="team-avatar">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <h3 class="team-name">Vedant Bumrela</h3>
+              <p class="team-role">AI&DS Engineer</p>
+              <div class="team-info">
+                <p><strong>Phone:</strong> 9322617537</p>
+                <p><strong>Email:</strong> <a href="mailto:vedantbumrela@gmail.com">vedantbumrela@gmail.com</a></p>
+                <p><strong>Specialization:</strong> Deep Learning & Bioinformatics</p>
+              </div>
+              <div class="file-upload-section">
+                <label class="file-upload-label">Upload Profile Photo:</label>
+                <input type="file" accept="image/*" class="team-file-input" />
+              </div>
+            </div>
+
+            <div class="team-card scale-in" style="animation-delay: 0.4s">
+              <div class="team-avatar">
+                <i class="fas fa-user-circle"></i>
+              </div>
+              <h3 class="team-name">Shravani Deshmukh</h3>
+              <p class="team-role">AI&DS Engineer</p>
+              <div class="team-info">
+                <p><strong>Phone:</strong> 9322617537</p>
+                <p><strong>Email:</strong> <a href="mailto:shravani.deshmukh5557@gmail.com">shravani.deshmukh5557@gmail.com</a></p>
+                <p><strong>Specialization:</strong> Data Science & Computational Chemistry</p>
+              </div>
+              <div class="file-upload-section">
+                <label class="file-upload-label">Upload Profile Photo:</label>
+                <input type="file" accept="image/*" class="team-file-input" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderInfoPage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card">
+          <h1 class="section-title">Information & Resources</h1>
+          
+          <div style="text-align: center; padding: 2rem; background: var(--gradient-accent); border-radius: 16px; margin-bottom: 3rem;">
+            <h3 style="color: white; font-size: 1.5rem; font-weight: 700;">Committed to open science and accelerating biomedical innovation</h3>
+          </div>
+
+          <div style="line-height: 1.8; color: var(--text-secondary);">
+            <p style="font-size: 1.1rem; margin-bottom: 2rem;">
+              GenBind is a cutting-edge AI-powered molecular binding exploration platform designed to revolutionize drug discovery and biotechnology research. At its core, GenBind integrates advanced artificial intelligence algorithms with computational chemistry techniques to automate the generation of novel molecular structures and accurately predict their binding affinities with protein targets.
+            </p>
+
+            <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 2rem 0 1rem 0;">Key Features:</h3>
+            <ul style="padding-left: 1.5rem; margin-bottom: 2rem;">
+              <li style="margin-bottom: 0.5rem;"><strong>AI-Driven Molecular Generation:</strong> Leverage state-of-the-art generative models to create novel drug-like compounds</li>
+              <li style="margin-bottom: 0.5rem;"><strong>Protein-Ligand Docking:</strong> Advanced algorithms for accurate binding pose prediction and scoring</li>
+              <li style="margin-bottom: 0.5rem;"><strong>Interactive 3D Visualization:</strong> Immersive molecular viewers for detailed structural analysis</li>
+              <li style="margin-bottom: 0.5rem;"><strong>Comprehensive Databases:</strong> Access to extensive molecular and protein structure libraries</li>
+              <li style="margin-bottom: 0.5rem;"><strong>API Integration:</strong> Seamless integration with existing computational workflows</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 2rem 0 1rem 0;">Research Applications:</h3>
+            <ul style="padding-left: 1.5rem; margin-bottom: 2rem;">
+              <li style="margin-bottom: 0.5rem;">Drug discovery and lead optimization</li>
+              <li style="margin-bottom: 0.5rem;">Protein-protein interaction studies</li>
+              <li style="margin-bottom: 0.5rem;">Enzyme inhibitor design</li>
+              <li style="margin-bottom: 0.5rem;">Molecular property prediction</li>
+              <li style="margin-bottom: 0.5rem;">Chemical space exploration</li>
+            </ul>
+
+            <h3 style="color: var(--text-primary); font-size: 1.3rem; margin: 2rem 0 1rem 0;">Technology Stack:</h3>
+            <ul style="padding-left: 1.5rem;">
+              <li style="margin-bottom: 0.5rem;">Machine Learning: TensorFlow, PyTorch, Scikit-learn</li>
+              <li style="margin-bottom: 0.5rem;">Molecular Modeling: RDKit, OpenEye, Schrödinger Suite</li>
+              <li style="margin-bottom: 0.5rem;">Visualization: 3Dmol.js, PyMOL, ChimeraX</li>
+              <li style="margin-bottom: 0.5rem;">Backend: Python, FastAPI, PostgreSQL</li>
+              <li style="margin-bottom: 0.5rem;">Frontend: React, Three.js, WebGL</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderDownloadPage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card">
+          <h1 class="section-title">Download Center</h1>
+          <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 2rem; color: var(--text-secondary);">
+            Access downloadable molecular datasets, protein structures, binding affinity scores, scripts and analysis tools for academic use.
+          </p>
+          
+          <div style="text-align: center; padding: 2rem; background: var(--gradient-primary); border-radius: 16px; margin-bottom: 3rem;">
+            <h3 style="color: white; font-size: 1.5rem; font-weight: 700;">All downloads are for research and educational purposes</h3>
+          </div>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <h3 class="feature-title">Molecular Datasets</h3>
+              <p class="feature-description">Curated collections of drug-like molecules with computed properties and bioactivity data</p>
+              <button class="upload-btn" style="margin-top: 1rem;">
+                <i class="fas fa-download"></i> Download Dataset
+              </button>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-dna"></i>
+              </div>
+              <h3 class="feature-title">Protein Structures</h3>
+              <p class="feature-description">High-quality protein structures optimized for molecular docking studies</p>
+              <button class="upload-btn" style="margin-top: 1rem;">
+                <i class="fas fa-download"></i> Download Structures
+              </button>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <h3 class="feature-title">Analysis Scripts</h3>
+              <p class="feature-description">Python and R scripts for molecular analysis, visualization, and machine learning</p>
+              <button class="upload-btn" style="margin-top: 1rem;">
+                <i class="fas fa-download"></i> Download Scripts
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderWebServicesPage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card">
+          <h1 class="section-title">GenBind WebServices</h1>
+          <p style="font-size: 1.2rem; line-height: 1.8; margin-bottom: 2rem; color: var(--text-secondary);">
+            Integrate GenBind APIs in your projects for automated molecular screening, AI binding predictions and more. REST API documentation included.
+          </p>
+          
+          <div style="text-align: center; padding: 2rem; background: var(--gradient-secondary); border-radius: 16px; margin-bottom: 3rem;">
+            <h3 style="color: white; font-size: 1.5rem; font-weight: 700;">Contact us to request API access and usage details</h3>
+          </div>
+
+          <div style="background: var(--dark-card); border-radius: 12px; padding: 2rem; margin-bottom: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.3rem;">API Endpoints</h3>
+            <div style="font-family: 'JetBrains Mono', monospace; background: var(--dark-bg); padding: 1rem; border-radius: 8px; color: var(--text-primary);">
+              <div style="margin-bottom: 0.5rem;"><span style="color: var(--success);">POST</span> /api/v1/generate</div>
+              <div style="margin-bottom: 0.5rem;"><span style="color: var(--primary);">GET</span>  /api/v1/molecules/{id}</div>
+              <div style="margin-bottom: 0.5rem;"><span style="color: var(--warning);">PUT</span>  /api/v1/dock</div>
+              <div><span style="color: var(--danger);">DELETE</span> /api/v1/results/{id}</div>
+            </div>
+          </div>
+
+          <div class="feature-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-flask"></i>
+              </div>
+              <h3 class="feature-title">Molecular Generation API</h3>
+              <p class="feature-description">Generate novel molecules with specified properties and constraints</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-search"></i>
+              </div>
+              <h3 class="feature-title">Binding Prediction API</h3>
+              <p class="feature-description">Predict protein-ligand binding affinities and poses</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3 class="feature-title">Analytics API</h3>
+              <p class="feature-description">Comprehensive molecular property calculation and analysis</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderContactPage() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card">
+          <h1 class="section-title">Contact & Feedback</h1>
+          
+          <div style="text-align: center; padding: 2rem; background: var(--gradient-accent); border-radius: 16px; margin-bottom: 3rem;">
+            <h3 style="color: white; font-size: 1.5rem; font-weight: 700;">Community driven science!</h3>
+          </div>
+        </div>
+
+        <div class="contact-section">
+          <div class="contact-card">
+            <h2 class="contact-title">Contact GenBind Team</h2>
+            
+            <form id="contact-form">
+              <div class="form-group">
+                <input type="text" class="form-input" placeholder="Your Name" required>
+                <i class="fas fa-user"></i>
+              </div>
+              
+              <div class="form-group">
+                <input type="email" class="form-input" placeholder="Your Email" required>
+                <i class="fas fa-envelope"></i>
+              </div>
+              
+              <div class="form-group">
+                <input type="text" class="form-input" placeholder="Subject">
+                <i class="fas fa-tag"></i>
+              </div>
+              
+              <div class="form-group">
+                <textarea class="form-input form-textarea" placeholder="Your Message" required></textarea>
+                <i class="fas fa-comment" style="top: 1.5rem;"></i>
+              </div>
+              
+              <div class="form-group">
+                <input type="file" class="form-input" style="padding-left: 3rem;">
+                <i class="fas fa-paperclip"></i>
+              </div>
+              
+              <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i>
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add form submission handler
+    document.getElementById('contact-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.handleContactSubmission();
+    });
+  }
+
+  async handleContactSubmission() {
+    const submitBtn = document.querySelector('.submit-btn');
+    
+    submitBtn.innerHTML = '<span class="spinner"></span>Sending...';
+    submitBtn.disabled = true;
+
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    submitBtn.innerHTML = '<i class="fas fa-check"></i>Message Sent!';
+    submitBtn.classList.add('success-state');
+    
+    setTimeout(() => {
+      submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i>Send Message';
+      submitBtn.classList.remove('success-state');
+      submitBtn.disabled = false;
+      document.getElementById('contact-form').reset();
+    }, 3000);
+  }
+}
+
+// CSS for shake animation
+const shakeKeyframes = `
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+`;
+
+// Add shake animation to stylesheet
+const style = document.createElement('style');
+style.textContent = shakeKeyframes;
+document.head.appendChild(style);
+
+// Initialize the application
+window.addEventListener('DOMContentLoaded', () => {
+  new GenBindApp();
+});
+</script>
+</body>
+</html>

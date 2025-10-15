@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GenBind - Revolutionary AI Molecular Discovery Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<style>
+:root {
+  /* Enhanced Color Palette */
+  --primary: #3b82f6;
+  --primary-dark: #1e40af;
+  --primary-light: #60a5fa;
+  --secondary: #8b5cf6;
+  --accent: #06b6d4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  
+  /* Enhanced Dark Theme */
+  --dark-bg: #0a0e1a;
+  --dark-card: #1e293b;
+  --dark-border: #334155;
+  --darker-bg: #030712;
+  --lighter-bg: #1f2937;
+  
+  /* Enhanced Text Colors */
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #64748b;
+  --text-accent: #06b6d4;
+  
+  /* Advanced Glass Effects */
+  --glass-bg: rgba(30, 41, 59, 0.85);
+  --glass-light: rgba(59, 130, 246, 0.1);
+  --glass-border: rgba(148, 163, 184, 0.15);
+  --glass-hover: rgba(59, 130, 246, 0.2);
+  
+  /* Enhanced Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  --shadow-neon: 0 0 20px rgba(59, 130, 246, 0.5);
+  
+  /* Advanced Gradients */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --gradient-success: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+  --gradient-warning: linear-gradient(135deg, #fad0c4 0%, #ffd1ff 100%);
+  --gradient-molecular: linear-gradient(135deg, #667eea 0%, #06b6d4 50%, #10b981 100%);
+  --gradient-neural: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #f59e0b 100%);
+  
+  /* Animation Variables */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+body, html { 
+  height: 100%; 
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  line-height: 1.6;
+}
+
+/* Advanced Animated Background */
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(ellipse at center, #1a202c 0%, #0a0e1a 70%);
+  z-index: -2;
+}
+
+.animated-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+  animation: backgroundPulse 20s ease-in-out infinite alternate;
+}
+
+@keyframes backgroundPulse {
+  0% { opacity: 0.3; transform: scale(1); }
+  100% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* Enhanced Floating Particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.6;
+  animation: floatParticle linear infinite;
+}
+
+.particle.small {
+  width: 3px;
+  height: 3px;
+  background: var(--primary);
+  box-shadow: 0 0 6px var(--primary);
+}
+
+.particle.medium {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.particle.large {
+  width: 10px;
+  height: 10px;
+  background: var(--secondary);
+  box-shadow: 0 0 15px var(--secondary);
+}
+
+@keyframes floatParticle {
+  from {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  to {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* Advanced Loading Screen */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0a0e1a 0%, #1e293b 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: all var(--transition-slow);
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+.molecular-loader {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 2rem;
+}
+
+.atom {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+}
+
+.atom.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  box-shadow: 0 0 20px var(--primary);
+  width: 30px;
+  height: 30px;
+  animation: centerPulse 2s ease-in-out infinite;
+}
+
+.atom.orbit1 {
+  border-color: var(--accent);
+  animation: orbit1 3s linear infinite;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.atom.orbit2 {
+  border-color: var(--secondary);
+  animation: orbit2 4s linear infinite reverse;
+  box-shadow: 0 0 10px var(--secondary);
+}
+
+.atom.orbit3 {
+  border-color: var(--success);
+  animation: orbit3 5s linear infinite;
+  box-shadow: 0 0 10px var(--success);
+}
+
+@keyframes centerPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.2); }
+}
+
+@keyframes orbit1 {
+  0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
+}
+
+@keyframes orbit2 {
+  0% { transform: rotate(0deg) translateX(50px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(50px) rotate(-360deg); }
+}
+
+@keyframes orbit3 {
+  0% { transform: rotate(0deg) translateX(60px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(60px) rotate(-360deg); }
+}
+
+.loading-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes textGlow {
+  from { filter: brightness(1); }
+  to { filter: brightness(1.3); }
+}
+
+.loading-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 400px;
+  animation: fadeInUp 1s ease-out 0.5s both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced Login Container */
+#login-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(20px);
+  background: rgba(10, 14, 26, 0.9);
+  transition: all var(--transition-slow);
+}
+
+.login-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  border: 2px solid var(--glass-border);
+  padding: 3rem 2.5rem;
+  border-radius: 32px;
+  width: 480px;
+  box-shadow: var(--shadow-2xl), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transform: translateY(30px) scale(0.95);
+  animation: loginSlideIn 1s var(--bounce) forwards;
+}
+
+@keyframes loginSlideIn {
+  to {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.login-panel::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(from 0deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  animation: loginRotate 10s linear infinite;
+  z-index: -1;
+}
+
+@keyframes loginRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.login-panel h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  background: var(--gradient-molecular);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.input-group i {
+  position: absolute;
+  left: 1.2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  z-index: 1;
+  transition: all var(--transition-normal);
+}
+
+.login-panel input {
+  width: 100%;
+  padding: 1.2rem 1.2rem 1.2rem 3.5rem;
+  border: 2px solid var(--dark-border);
+  border-radius: 16px;
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-panel input::placeholder {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.login-panel input:focus {
+  border-color: var(--primary);
+  background: rgba(30, 41, 59, 0.8);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), var(--shadow-neon);
+  transform: translateY(-2px);
+}
+
+.login-panel input:focus + i {
+  color: var(--primary);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.login-btn {
+  width: 100%;
+  padding: 1.3rem;
+  border: none;
+  border-radius: 16px;
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(59, 130, 246, 0.4);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.login-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.login-btn:hover::before {
+  left: 100%;
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2xl), 0 0 30px rgba(59, 130, 246, 0.6);
+}
+
+.login-btn:active {
+  transform: translateY(-1px);
+}
+
+.login-btn.loading {
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.login-btn .spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid #ffffff;
+  border-radius: 50%;
+  animation: loginSpin 1s linear infinite;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+@keyframes loginSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#error-msg {
+  color: var(--danger);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all var(--transition-normal);
+}
+
+#error-msg.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Enhanced Header */
+.header {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: all var(--transition-normal);
+}
+
+.header.scrolled {
+  background: rgba(30, 41, 59, 0.95);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  background: var(--gradient-molecular);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  position: relative;
+}
+
+.logo::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--transition-normal);
+}
+
+.logo:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: left var(--transition-normal);
+  z-index: -1;
+  border-radius: 12px;
+}
+
+.nav-link:hover::before,
+.nav-link.active::before {
+  left: 0;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-link i {
+  font-size: 1.1rem;
+  transition: transform var(--transition-normal);
+}
+
+.nav-link:hover i {
+  transform: scale(1.2);
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.notification-btn, .settings-btn {
+  position: relative;
+  padding: 0.8rem;
+  border: none;
+  background: rgba(59, 130, 246, 0.15);
+  color: var(--primary);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.notification-btn:hover, .settings-btn:hover {
+  background: rgba(59, 130, 246, 0.25);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.notification-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 20px;
+  height: 20px;
+  background: var(--danger);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--dark-bg);
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  border: 2px solid var(--glass-border);
+  box-shadow: var(--shadow-md);
+}
+
+.user-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Enhanced Info Bar */
+.info-bar {
+  background: var(--gradient-accent);
+  padding: 1.2rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.info-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: infoSlide 5s infinite;
+}
+
+@keyframes infoSlide {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Enhanced Main Container */
+.container {
+  max-width: 1400px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px);
+  border: 2px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: var(--shadow-xl), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  margin-bottom: 3rem;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.glass-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-2xl), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.glass-card:hover::before {
+  opacity: 1;
+}
+
+/* Enhanced Hero Section */
+.hero-section {
+  text-align: center;
+  padding: 5rem 0;
+  position: relative;
+}
+
+.hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 5rem;
+  font-weight: 900;
+  margin-bottom: 1.5rem;
+  background: var(--gradient-molecular);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  position: relative;
+  animation: titleFloat 6s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-subtitle {
+  font-size: 1.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-bottom: 4rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.4;
+}
+
+/* Enhanced Platform Statistics */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 4rem 0;
+}
+
+.stat-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal);
+}
+
+.stat-card:hover::before {
+  transform: scaleX(1);
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+  background: var(--gradient-primary);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: white;
+  transition: all var(--transition-normal);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+.stat-value {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem;
+  font-weight: 900;
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.stat-description {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Enhanced Section Titles */
+.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  color: var(--text-primary);
+  position: relative;
+  padding-left: 2rem;
+}
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background: var(--gradient-primary);
+  border-radius: 3px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 100px;
+  height: 3px;
+  background: var(--gradient-accent);
+  border-radius: 2px;
+}
+
+/* Enhanced AI Model Cards */
+.model-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2.5rem;
+  margin: 3rem 0;
+}
+
+.model-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.model-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  pointer-events: none;
+}
+
+.model-card:hover::before,
+.model-card.selected::before {
+  opacity: 1;
+}
+
+.model-card:hover,
+.model-card.selected {
+  border-color: var(--primary);
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl), 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+.model-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.model-icon {
+  width: 70px;
+  height: 70px;
+  background: var(--gradient-primary);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.model-card:hover .model-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.model-name {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.3rem;
+}
+
+.model-type {
+  color: var(--text-accent);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.model-description {
+  color: var(--text-secondary);
+  margin: 1.5rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.model-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.model-stat {
+  text-align: center;
+}
+
+.model-stat-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  color: var(--primary);
+  font-size: 1.4rem;
+  margin-bottom: 0.3rem;
+}
+
+.model-stat-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Enhanced Input Methods */
+.input-methods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.input-method {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 2.5rem;
+  text-align: center;
+  transition: all var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.input-method::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.input-method:hover::before {
+  left: 100%;
+}
+
+.input-method:hover,
+.input-method.active {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+  background: var(--glass-hover);
+}
+
+.input-icon {
+  width: 80px;
+  height: 80px;
+  background: var(--gradient-accent);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: white;
+  margin: 0 auto 2rem;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.input-method:hover .input-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.input-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.input-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Enhanced Input Area */
+.target-input-area {
+  background: var(--dark-card);
+  border-radius: 20px;
+  padding: 3rem;
+  margin: 3rem 0;
+  border: 2px solid var(--dark-border);
+  transition: all var(--transition-normal);
+}
+
+.target-input-area:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.input-label {
+  display: block;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.input-field {
+  width: 100%;
+  background: var(--darker-bg);
+  border: 2px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  resize: vertical;
+  min-height: 140px;
+  transition: all var(--transition-normal);
+  line-height: 1.6;
+}
+
+.input-field:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1), var(--shadow-neon);
+  background: var(--dark-bg);
+}
+
+.input-field::placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.input-examples {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.example-chip {
+  background: rgba(59, 130, 246, 0.15);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  color: var(--primary);
+  padding: 0.7rem 1.5rem;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.example-chip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--primary);
+  transition: left var(--transition-normal);
+  z-index: -1;
+}
+
+.example-chip:hover::before {
+  left: 0;
+}
+
+.example-chip:hover {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Enhanced Generation Controls */
+.generation-controls {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 3rem;
+  margin: 3rem 0;
+}
+
+.controls-title {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-primary);
+  margin-bottom: 2.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.controls-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.control-group {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-normal);
+}
+
+.control-group:hover {
+  background: rgba(30, 41, 59, 0.7);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.control-label {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  display: block;
+  font-family: 'Poppins', sans-serif;
+}
+
+.control-input, .control-select {
+  width: 100%;
+  background: var(--darker-bg);
+  border: 2px solid var(--dark-border);
+  border-radius: 10px;
+  padding: 1rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all var(--transition-normal);
+  font-family: 'Inter', sans-serif;
+}
+
+.control-input:focus, .control-select:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.control-slider {
+  width: 100%;
+  background: var(--dark-border);
+  border-radius: 6px;
+  height: 8px;
+  outline: none;
+  -webkit-appearance: none;
+  position: relative;
+}
+
+.control-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.control-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: var(--shadow-lg), 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.slider-value {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+/* Enhanced Generate Button */
+.generate-section {
+  text-align: center;
+  margin: 4rem 0;
+}
+
+.generate-btn {
+  background: var(--gradient-secondary);
+  color: white;
+  border: none;
+  padding: 2rem 4rem;
+  border-radius: 20px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-lg), 0 0 30px rgba(245, 101, 101, 0.4);
+  position: relative;
+  overflow: hidden;
+  min-width: 320px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.generate-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.generate-btn:hover::before {
+  left: 100%;
+}
+
+.generate-btn:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: var(--shadow-2xl), 0 0 50px rgba(245, 101, 101, 0.6);
+}
+
+.generate-btn:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.generate-btn.loading {
+  pointer-events: none;
+  animation: generatePulse 2s infinite;
+}
+
+@keyframes generatePulse {
+  0%, 100% { box-shadow: var(--shadow-lg), 0 0 30px rgba(245, 101, 101, 0.4); }
+  50% { box-shadow: var(--shadow-xl), 0 0 50px rgba(245, 101, 101, 0.8); }
+}
+
+/* Enhanced Progress Bar */
+.progress-container {
+  margin: 3rem 0;
+  display: none;
+}
+
+.progress-text {
+  text-align: center;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 12px;
+  background: var(--dark-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 1rem 0;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 6px;
+  transition: width 0.8s ease;
+  width: 0%;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Enhanced Results Section */
+.results-section {
+  margin: 4rem 0;
+}
+
+.results-grid {
+  display: grid;
+  gap: 1.5rem;
+  max-height: 700px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.results-empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 4rem 2rem;
+  background: var(--glass-bg);
+  border-radius: 20px;
+  border: 2px dashed var(--glass-border);
+}
+
+.results-empty i {
+  font-size: 5rem;
+  opacity: 0.3;
+  margin-bottom: 2rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.results-empty h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+}
+
+.results-empty p {
+  font-size: 1.1rem;
+}
+
+/* Enhanced Molecule Cards */
+.molecule-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 18px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.molecule-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--transition-normal);
+}
+
+.molecule-card:hover::before,
+.molecule-card.selected::before {
+  transform: scaleX(1);
+}
+
+.molecule-card:hover,
+.molecule-card.selected {
+  border-color: var(--primary);
+  transform: translateX(10px) scale(1.02);
+  box-shadow: var(--shadow-lg), 0 0 25px rgba(59, 130, 246, 0.2);
+}
+
+.molecule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.molecule-smiles {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  flex: 1;
+  margin-right: 1.5rem;
+  line-height: 1.4;
+  word-break: break-all;
+}
+
+.molecule-score {
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 800;
+  font-size: 1rem;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: var(--shadow-md);
+}
+
+.molecule-score.excellent {
+  background: var(--gradient-success);
+}
+
+.molecule-score.good {
+  background: var(--gradient-primary);
+}
+
+.molecule-score.moderate {
+  background: var(--gradient-warning);
+}
+
+.molecule-score.poor {
+  background: var(--gradient-secondary);
+}
+
+.molecule-properties {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.property-item {
+  background: rgba(30, 41, 59, 0.5);
+  padding: 1rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  transition: all var(--transition-normal);
+}
+
+.property-item:hover {
+  background: rgba(30, 41, 59, 0.8);
+  transform: translateY(-3px);
+}
+
+.property-label {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.property-value {
+  color: var(--text-primary);
+  font-weight: 800;
+  font-size: 1.1rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Enhanced Visualization Section */
+.visualization-section {
+  margin: 4rem 0;
+}
+
+.visualization-container {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border: 2px solid var(--glass-border);
+  border-radius: 24px;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.visualization-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+.visualization-icon {
+  width: 120px;
+  height: 120px;
+  background: var(--gradient-primary);
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: white;
+  opacity: 0.8;
+  animation: visualFloat 4s ease-in-out infinite;
+  box-shadow: var(--shadow-lg);
+}
+
+@keyframes visualFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.visualization-text {
+  color: var(--text-secondary);
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+}
+
+.visualization-description {
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+/* Enhanced 3D Molecular Viewer */
+.molecular-viewer {
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+  position: relative;
+  overflow: hidden;
+}
+
+.viewer-controls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+}
+
+.control-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  backdrop-filter: blur(20px);
+}
+
+.control-btn:hover {
+  background: var(--glass-hover);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Mobile Responsiveness */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 100%;
+    padding: 0 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .model-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.4rem;
+  }
+  
+  .login-panel {
+    width: 95%;
+    margin: 0 1rem;
+    padding: 2.5rem 2rem;
+  }
+  
+  .nav-container {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .input-methods {
+    grid-template-columns: 1fr;
+  }
+  
+  .controls-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .glass-card {
+    padding: 2rem;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .login-panel h2 {
+    font-size: 2.5rem;
+  }
+  
+  .generate-btn {
+    padding: 1.5rem 2rem;
+    font-size: 1.2rem;
+  }
+  
+  .molecule-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .molecule-smiles {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Enhanced Animations */
+.fade-in {
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.scale-in {
+  animation: scaleIn 0.8s var(--bounce);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.stagger-animation {
+  animation: fadeIn 0.6s ease-out both;
+}
+
+.stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+.stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+.stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+.stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+.stagger-animation:nth-child(5) { animation-delay: 0.5s; }
+
+/* Enhanced Tooltips */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 140px;
+  background: var(--dark-bg);
+  color: var(--text-primary);
+  text-align: center;
+  border-radius: 8px;
+  padding: 8px 12px;
+  position: absolute;
+  z-index: 1000;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -70px;
+  opacity: 0;
+  transition: all var(--transition-normal);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.tooltip .tooltip-text::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--dark-bg) transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(-5px);
+}
+
+/* Enhanced Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-border);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 6px;
+  border: 2px solid var(--dark-border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-light);
+}
+
+/* Error & Success States */
+.shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+  20%, 40%, 60%, 80% { transform: translateX(8px); }
+}
+
+.success-glow {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5) !important;
+  border-color: var(--success) !important;
+}
+
+.error-glow {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5) !important;
+  border-color: var(--danger) !important;
+}
+
+/* Additional Professional Elements */
+.coming-soon-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--gradient-warning);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.feature-badge {
+  background: var(--primary);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 0.5rem;
+}
+
+.pro-badge {
+  background: var(--gradient-secondary);
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 0.5rem;
+}
+
+/* Enhanced Focus States */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible,
+.nav-link:focus-visible,
+.input-method:focus-visible,
+.model-card:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
+</style>
+</head>
+
+<body>
+<!-- Enhanced Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="molecular-loader">
+    <div class="atom center"></div>
+    <div class="atom orbit1"></div>
+    <div class="atom orbit2"></div>
+    <div class="atom orbit3"></div>
+  </div>
+  <div class="loading-text">Initializing GenBind</div>
+  <div class="loading-subtitle">Revolutionary AI-Driven Molecular Discovery Platform<br>Preparing quantum computational engines...</div>
+</div>
+
+<!-- Enhanced Animated Background -->
+<div class="animated-bg"></div>
+
+<!-- Enhanced Floating Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Enhanced Login Container -->
+<div id="login-container">
+  <div class="login-panel">
+    <h2>GenBind</h2>
+    <p class="login-subtitle">Revolutionary AI-Driven Molecular Discovery Platform</p>
+    
+    <form id="login-form" onsubmit="return false;">
+      <div class="input-group">
+        <input id="username" type="text" placeholder="Research Username" required autocomplete="off">
+        <i class="fas fa-user-tie"></i>
+      </div>
+      
+      <div class="input-group">
+        <input id="password" type="password" placeholder="Security Passphrase" required autocomplete="off">
+        <i class="fas fa-lock"></i>
+      </div>
+      
+      <button id="login-btn" class="login-btn" type="button">
+        <span class="btn-text">Access Laboratory</span>
+      </button>
+    </form>
+    
+    <div id="error-msg" role="alert"></div>
+  </div>
+</div>
+
+<!-- Enhanced Main Portal -->
+<div id="main-portal" style="display: none;">
+  <!-- Enhanced Header -->
+  <header class="header" id="main-header">
+    <div class="nav-container">
+      <a href="#" class="logo">GenBind</a>
+      
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" data-page="generator"><i class="fas fa-atom"></i> Generator <span class="feature-badge">AI</span></a></li>
+          <li><a href="#" class="nav-link" data-page="docking"><i class="fas fa-dna"></i> Docking <span class="pro-badge">Pro</span></a></li>
+          <li><a href="#" class="nav-link" data-page="explorer"><i class="fas fa-search-plus"></i> Explorer</a></li>
+          <li><a href="#" class="nav-link" data-page="pipeline"><i class="fas fa-chart-line"></i> Pipeline</a></li>
+          <li><a href="#" class="nav-link" data-page="analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+          <li><a href="#" class="nav-link" data-page="research"><i class="fas fa-users"></i> Research</a></li>
+        </ul>
+      </nav>
+      
+      <div class="user-menu">
+        <button class="notification-btn tooltip">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge">7</span>
+          <span class="tooltip-text">Notifications</span>
+        </button>
+        <button class="settings-btn tooltip">
+          <i class="fas fa-cog"></i>
+          <span class="tooltip-text">Settings</span>
+        </button>
+        <div class="user-avatar tooltip">
+          <i class="fas fa-user-astronaut"></i>
+          <span class="tooltip-text">Dr. Research Profile</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Enhanced Info Bar -->
+  <div class="info-bar">
+    <i class="fas fa-atom"></i>
+    Exploring 10^60 chemical compounds through revolutionary AI-driven molecular generation and quantum binding prediction
+    <i class="fas fa-flask" style="margin: 0 10px;"></i>
+    Currently processing 15,000+ molecules/hour with 94.2% accuracy
+  </div>
+
+  <!-- Enhanced Main Container -->
+  <main class="container">
+    <div id="main-section-content"></div>
+  </main>
+</div>
+
+<script>
+// Enhanced JavaScript with advanced features
+class GenBindAdvancedPlatform {
+  constructor() {
+    this.validUser = "researcher";
+    this.validPass = "genbind2025";
+    this.currentSection = "generator";
+    this.selectedModel = "MolGAN-Pro";
+    this.selectedInputMethod = "target";
+    this.generatedMolecules = [];
+    this.selectedMoleculeIndex = null;
+    this.isGenerating = false;
+    
+    // Enhanced platform statistics
+    this.platformStats = {
+      chemical_space: "10^60",
+      molecules_generated: "2.7M+",
+      protein_targets: "50,000+", 
+      success_rate: "94.2%",
+      time_reduction: "78%",
+      cost_savings: "$2.3B+",
+      active_researchers: "12,547",
+      publications: "1,289"
+    };
+    
+    // Enhanced AI models with detailed specs
+    this.aiModels = [
+      {
+        name: "MolGAN-Pro",
+        type: "Generative Adversarial Network",
+        accuracy: "94.2%",
+        speed: "15,000 mol/hour",
+        specialty: "Drug-like compounds with optimized ADMET properties",
+        icon: "fas fa-brain",
+        parameters: "847M",
+        training_data: "ChEMBL + PubChem (2.1M compounds)",
+        description: "State-of-the-art GAN architecture specifically designed for pharmaceutical drug discovery with enhanced molecular diversity and drug-likeness optimization."
+      },
+      {
+        name: "ChemVAE-Ultra", 
+        type: "Variational Autoencoder",
+        accuracy: "91.8%",
+        speed: "25,000 mol/hour",
+        specialty: "Novel scaffold exploration and chemical space mapping",
+        icon: "fas fa-project-diagram",
+        parameters: "623M",
+        training_data: "ZINC + GDB-17 (1.7M compounds)",
+        description: "Advanced variational autoencoder with latent space optimization for discovering novel chemical scaffolds and exploring uncharted regions of chemical space."
+      },
+      {
+        name: "TransMol-AI",
+        type: "Transformer Architecture",
+        accuracy: "96.1%",
+        speed: "8,000 mol/hour", 
+        specialty: "Target-specific molecular design with binding optimization",
+        icon: "fas fa-microchip",
+        parameters: "1.2B",
+        training_data: "BindingDB + ChEMBL (3.2M bioactivity records)",
+        description: "Revolutionary transformer-based model that generates molecules specifically optimized for target proteins with predicted binding affinities and selectivity profiles."
+      }
+    ];
+    
+    // Sample molecular targets
+    this.molecularTargets = [
+      "EGFR kinase inhibitor",
+      "ACE2 receptor modulator", 
+      "β-secretase inhibitor",
+      "SARS-CoV-2 main protease",
+      "Alzheimer's tau protein",
+      "HIV reverse transcriptase",
+      "BCL-2 family proteins",
+      "p53-MDM2 interaction"
+    ];
+    
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.createEnhancedParticles();
+    this.setupEventListeners();
+    this.handleInitialLoad();
+    this.initializeThreeJS();
+  }
+
+  createEnhancedParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 80;
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      const size = Math.random() * 3;
+      
+      if (size < 1) {
+        particle.className = 'particle small';
+      } else if (size < 2) {
+        particle.className = 'particle medium';
+      } else {
+        particle.className = 'particle large';
+      }
+      
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.animationDelay = Math.random() * 25 + 's';
+      particle.style.animationDuration = (Math.random() * 20 + 15) + 's';
+      
+      particlesContainer.appendChild(particle);
+    }
+  }
+
+  initializeThreeJS() {
+    // Initialize Three.js for 3D molecular visualization
+    // This would be implemented for real 3D molecule rendering
+    console.log("Three.js molecular visualization system initialized");
+  }
+
+  setupEventListeners() {
+    // Enhanced login functionality
+    document.getElementById('login-btn').addEventListener('click', () => this.handleAdvancedLogin());
+    
+    // Enhanced navigation
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = link.getAttribute('data-page');
+        this.loadSection(page);
+        this.updateActiveNav(link);
+      });
+    });
+
+    // Enhanced keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && document.activeElement.id === 'password') {
+        this.handleAdvancedLogin();
+      }
+      
+      // Advanced keyboard shortcuts for power users
+      if (e.ctrlKey && e.key === 'g') {
+        e.preventDefault();
+        const generateBtn = document.getElementById('generate-btn');
+        if (generateBtn && !generateBtn.disabled) {
+          this.generateMolecules();
+        }
+      }
+    });
+
+    // Enhanced scroll effects
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('main-header');
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  }
+
+  handleInitialLoad() {
+    // Enhanced loading sequence
+    setTimeout(() => {
+      const loadingScreen = document.getElementById('loadingScreen');
+      loadingScreen.classList.add('fade-out');
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 800);
+    }, 3000); // Longer loading for dramatic effect
+  }
+
+  async handleAdvancedLogin() {
+    const loginBtn = document.getElementById('login-btn');
+    const errorMsg = document.getElementById('error-msg');
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Enhanced loading state with particles
+    loginBtn.classList.add('loading');
+    loginBtn.innerHTML = '<span class="spinner"></span>Authenticating with Quantum Security...';
+
+    // Simulate advanced authentication with multiple steps
+    const authSteps = [
+      'Verifying credentials...',
+      'Checking security clearance...',
+      'Initializing molecular databases...',
+      'Loading AI models...',
+      'Preparing workspace...'
+    ];
+
+    for (let i = 0; i < authSteps.length; i++) {
+      await new Promise(resolve => setTimeout(resolve, 400));
+      loginBtn.innerHTML = `<span class="spinner"></span>${authSteps[i]}`;
+    }
+
+    if (username === this.validUser && password === this.validPass) {
+      // Success with enhanced effects
+      errorMsg.classList.remove('show');
+      loginBtn.innerHTML = '<i class="fas fa-check"></i>Access Granted!';
+      loginBtn.classList.remove('loading');
+      loginBtn.classList.add('success-glow');
+      
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      this.showMainPortal();
+    } else {
+      // Enhanced error handling
+      loginBtn.classList.remove('loading');
+      loginBtn.innerHTML = '<span class="btn-text">Access Laboratory</span>';
+      errorMsg.textContent = "⚠️ Access Denied. Use credentials: 'researcher' / 'genbind2025'";
+      errorMsg.classList.add('show');
+      
+      // Enhanced shake animation
+      document.querySelector('.login-panel').classList.add('shake');
+      setTimeout(() => {
+        document.querySelector('.login-panel').classList.remove('shake');
+      }, 600);
+    }
+  }
+
+  showMainPortal() {
+    const loginContainer = document.getElementById('login-container');
+    const mainPortal = document.getElementById('main-portal');
+
+    // Enhanced transition with GSAP-like effects
+    loginContainer.style.transform = 'scale(0.8)';
+    loginContainer.style.opacity = '0';
+    
+    setTimeout(() => {
+      loginContainer.style.display = 'none';
+      mainPortal.style.display = 'block';
+      this.loadSection('generator');
+    }, 800);
+  }
+
+  updateActiveNav(activeLink) {
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.remove('active');
+    });
+    activeLink.classList.add('active');
+  }
+
+  loadSection(section) {
+    this.currentSection = section;
+    const content = document.getElementById('main-section-content');
+    
+    // Enhanced page transitions
+    content.style.opacity = '0';
+    content.style.transform = 'translateY(30px)';
+
+    setTimeout(() => {
+      switch(section) {
+        case 'generator':
+          this.renderAdvancedMolecularGenerator();
+          break;
+        case 'docking':
+          this.renderAdvancedDockingStudio();
+          break;
+        case 'explorer':
+          this.renderAdvancedChemicalExplorer();
+          break;
+        case 'pipeline':
+          this.renderAdvancedDrugPipeline();
+          break;
+        case 'analytics':
+          this.renderAdvancedAnalyticsDashboard();
+          break;
+        case 'research':
+          this.renderAdvancedResearchPortal();
+          break;
+        default:
+          this.renderAdvancedMolecularGenerator();
+      }
+
+      content.style.opacity = '1';
+      content.style.transform = 'translateY(0)';
+    }, 300);
+  }
+
+  renderAdvancedMolecularGenerator() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <!-- Enhanced Hero Section -->
+        <section class="hero-section">
+          <h1 class="hero-title">Molecular Generator</h1>
+          <p class="hero-subtitle">Revolutionary AI-Powered Drug Discovery through Advanced Generative Molecular Intelligence</p>
+          
+          <!-- Enhanced Platform Statistics -->
+          <div class="stats-grid">
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-infinity"></i></div>
+              <div class="stat-value">10^60</div>
+              <div class="stat-label">Chemical Compounds</div>
+              <div class="stat-description">Explorable chemical space</div>
+            </div>
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-flask"></i></div>
+              <div class="stat-value">${this.platformStats.molecules_generated}</div>
+              <div class="stat-label">Molecules Generated</div>
+              <div class="stat-description">High-quality drug candidates</div>
+            </div>
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+              <div class="stat-value">${this.platformStats.success_rate}</div>
+              <div class="stat-label">Success Rate</div>
+              <div class="stat-description">Industry-leading accuracy</div>
+            </div>
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+              <div class="stat-value">${this.platformStats.cost_savings}</div>
+              <div class="stat-label">Cost Savings</div>
+              <div class="stat-description">Documented impact</div>
+            </div>
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-users"></i></div>
+              <div class="stat-value">${this.platformStats.active_researchers}</div>
+              <div class="stat-label">Active Researchers</div>
+              <div class="stat-description">Global scientific community</div>
+            </div>
+            <div class="stat-card scale-in stagger-animation">
+              <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+              <div class="stat-value">${this.platformStats.publications}</div>
+              <div class="stat-label">Publications</div>
+              <div class="stat-description">Peer-reviewed research</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Enhanced AI Model Selection -->
+        <div class="glass-card">
+          <div class="model-section">
+            <h2 class="section-title">Advanced AI Generative Models</h2>
+            <div class="model-grid" id="model-grid">
+              ${this.aiModels.map((model, index) => `
+                <div class="model-card ${index === 0 ? 'selected' : ''}" data-model="${model.name}">
+                  <div class="model-header">
+                    <div class="model-icon">
+                      <i class="${model.icon}"></i>
+                    </div>
+                    <div>
+                      <div class="model-name">${model.name}</div>
+                      <div class="model-type">${model.type}</div>
+                    </div>
+                  </div>
+                  <p class="model-description">${model.description}</p>
+                  <div style="margin: 1.5rem 0; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 10px; border-left: 4px solid var(--primary);">
+                    <strong>Specialty:</strong> ${model.specialty}
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; font-size: 0.9rem;">
+                    <div><strong>Parameters:</strong> ${model.parameters}</div>
+                    <div><strong>Training Data:</strong> ${model.training_data}</div>
+                  </div>
+                  <div class="model-stats">
+                    <div class="model-stat">
+                      <div class="model-stat-value">${model.accuracy}</div>
+                      <div class="model-stat-label">Accuracy</div>
+                    </div>
+                    <div class="model-stat">
+                      <div class="model-stat-value">${model.speed}</div>
+                      <div class="model-stat-label">Generation Speed</div>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Input Methods -->
+        <div class="glass-card">
+          <div class="input-section">
+            <h2 class="section-title">Advanced Generation Input Methods</h2>
+            <div class="input-methods">
+              <div class="input-method active" data-method="target">
+                <div class="input-icon">
+                  <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="input-title">Target-Based Design</div>
+                <div class="input-description">Generate molecules optimized for specific protein targets with predicted binding affinities</div>
+              </div>
+              
+              <div class="input-method" data-method="smiles">
+                <div class="input-icon">
+                  <i class="fas fa-code"></i>
+                </div>
+                <div class="input-title">SMILES/SELFIES</div>
+                <div class="input-description">Use molecular string representations with advanced chemical validation</div>
+              </div>
+              
+              <div class="input-method" data-method="scaffold">
+                <div class="input-icon">
+                  <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <div class="input-title">Scaffold Hopping</div>
+                <div class="input-description">Generate bioisosteric replacements and novel structural variations</div>
+              </div>
+              
+              <div class="input-method" data-method="pharmacophore">
+                <div class="input-icon">
+                  <i class="fas fa-vector-square"></i>
+                </div>
+                <div class="input-title">Pharmacophore-Based</div>
+                <div class="input-description">Design molecules matching specific pharmacophoric patterns and constraints</div>
+              </div>
+            </div>
+            
+            <!-- Enhanced Target Input Area -->
+            <div class="target-input-area">
+              <label for="target-input" class="input-label">
+                <i class="fas fa-target"></i> Target Specification & Molecular Constraints:
+              </label>
+              <textarea 
+                id="target-input" 
+                class="input-field" 
+                placeholder="Enter detailed specifications:&#10;• Protein target (e.g., 'EGFR kinase domain with L858R mutation')&#10;• SMILES structure (e.g., 'CCO' for ethanol)&#10;• Pharmacophore requirements&#10;• ADMET constraints&#10;• Molecular weight range&#10;• Lipophilicity targets"
+              ></textarea>
+              
+              <div class="input-examples">
+                <div class="example-chip" data-example="EGFR kinase domain with T790M resistance mutation">EGFR T790M</div>
+                <div class="example-chip" data-example="ACE2-RBD interaction inhibitor with oral bioavailability">ACE2 Inhibitor</div>
+                <div class="example-chip" data-example="β-secretase inhibitor crossing blood-brain barrier">BACE1 CNS</div>
+                <div class="example-chip" data-example="COc1ccc(cc1)C(=O)N scaffold optimization">Amide Scaffold</div>
+                <div class="example-chip" data-example="Lipinski Rule of Five compliant with MW<400">Drug-like MW<400</div>
+                <div class="example-chip" data-example="Benzene ring system with halogen substitution">Halogenated Aromatics</div>
+                <div class="example-chip" data-example="Kinase selectivity profile with minimal off-targets">Selective Kinase</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Generation Controls -->
+        <div class="generation-controls">
+          <h3 class="controls-title"><i class="fas fa-sliders-h"></i> Advanced Generation Parameters</h3>
+          <div class="controls-grid">
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-sort-numeric-up"></i> Number of Molecules</label>
+              <input type="number" class="control-input" value="25" min="1" max="500" id="num-molecules">
+              <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">Recommended: 10-50 for exploration, 100+ for optimization</small>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-random"></i> Molecular Diversity</label>
+              <input type="range" class="control-slider" min="0.1" max="1.0" step="0.1" value="0.7" id="diversity">
+              <span class="slider-value">Current: 0.7</span>
+              <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">Higher values increase structural diversity</small>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-pills"></i> Drug-likeness Filter</label>
+              <select class="control-input control-select" id="druglike">
+                <option value="strict">Strict Lipinski (Ro5)</option>
+                <option value="extended">Extended Lipinski</option>
+                <option value="moderate" selected>Moderate Constraints</option>
+                <option value="relaxed">Relaxed Filtering</option>
+                <option value="lead">Lead-like (Ro3)</option>
+                <option value="none">No Filtering</option>
+              </select>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-weight"></i> Molecular Weight Range</label>
+              <input type="text" class="control-input" placeholder="Min-Max (Da)" value="200-500" id="mw-range">
+              <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">Typical drugs: 150-500 Da</small>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-tint"></i> LogP Range (Lipophilicity)</label>
+              <input type="text" class="control-input" placeholder="Min-Max" value="-1.0-5.0" id="logp-range">
+              <small style="color: var(--text-muted); margin-top: 0.5rem; display: block;">Oral drugs typically: 0-3</small>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label"><i class="fas fa-flask"></i> Synthesis Complexity</label>
+              <select class="control-input control-select" id="synthesis">
+                <option value="simple">Simple (SA < 3)</option>
+                <option value="moderate" selected>Moderate (SA 3-6)</option>
+                <option value="complex">Complex (SA > 6)</option>
+                <option value="any">Any Complexity</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Enhanced Generate Button -->
+          <div class="generate-section">
+            <button id="generate-btn" class="generate-btn">
+              <i class="fas fa-magic"></i>
+              <span class="btn-text">Generate Advanced Molecules</span>
+            </button>
+            
+            <!-- Enhanced Progress Bar -->
+            <div class="progress-container" id="progress-container">
+              <div class="progress-text" id="progress-text">Initializing quantum molecular engine...</div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Results Section -->
+        <div class="glass-card">
+          <div class="results-section">
+            <h2 class="section-title">Generated Molecular Candidates</h2>
+            <div class="results-grid" id="results-grid">
+              <div class="results-empty">
+                <i class="fas fa-atom"></i>
+                <h3>Advanced Molecular Generation Ready</h3>
+                <p>Select your AI model, configure parameters, and begin generating revolutionary drug candidates</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced Visualization Section -->
+        <div class="glass-card">
+          <div class="visualization-section">
+            <h2 class="section-title">Quantum 3D Molecular Visualization</h2>
+            <div class="visualization-container" id="visualization-container">
+              <div class="visualization-placeholder">
+                <div class="visualization-icon">
+                  <i class="fas fa-cube"></i>
+                </div>
+                <div class="visualization-text">
+                  Advanced 3D Molecular Structure Viewer
+                </div>
+                <p class="visualization-description">
+                  Select a generated molecule to visualize its 3D structure, binding interactions, and pharmacophoric features using our quantum-enhanced molecular renderer
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.setupAdvancedGeneratorFunctionality();
+  }
+
+  setupAdvancedGeneratorFunctionality() {
+    // Enhanced model selection with animations
+    document.querySelectorAll('.model-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.model-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        this.selectedModel = card.dataset.model;
+        
+        // Add selection animation
+        card.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+          card.style.transform = '';
+        }, 200);
+      });
+    });
+
+    // Enhanced input method selection
+    document.querySelectorAll('.input-method').forEach(method => {
+      method.addEventListener('click', () => {
+        document.querySelectorAll('.input-method').forEach(m => m.classList.remove('active'));
+        method.classList.add('active');
+        this.selectedInputMethod = method.dataset.method;
+        
+        // Update placeholder based on method
+        const targetInput = document.getElementById('target-input');
+        this.updateInputPlaceholder(this.selectedInputMethod, targetInput);
+      });
+    });
+
+    // Enhanced example chips with smart suggestions
+    document.querySelectorAll('.example-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const targetInput = document.getElementById('target-input');
+        targetInput.value = chip.dataset.example;
+        targetInput.focus();
+        
+        // Add selection effect
+        chip.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          chip.style.transform = '';
+        }, 200);
+      });
+    });
+
+    // Enhanced slider with real-time updates
+    const diversitySlider = document.getElementById('diversity');
+    diversitySlider.addEventListener('input', (e) => {
+      const value = parseFloat(e.target.value);
+      const span = e.target.nextElementSibling;
+      span.textContent = `Current: ${value.toFixed(1)}`;
+      
+      // Visual feedback for slider value
+      const percentage = (value - 0.1) / 0.9 * 100;
+      e.target.style.background = `linear-gradient(to right, var(--primary) 0%, var(--primary) ${percentage}%, var(--dark-border) ${percentage}%, var(--dark-border) 100%)`;
+    });
+
+    // Enhanced generate button with advanced features
+    document.getElementById('generate-btn').addEventListener('click', () => {
+      if (!this.isGenerating) {
+        this.generateAdvancedMolecules();
+      }
+    });
+
+    // Auto-save functionality
+    const inputs = ['target-input', 'num-molecules', 'mw-range', 'logp-range'];
+    inputs.forEach(inputId => {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.addEventListener('change', () => {
+          localStorage.setItem(`genbind_${inputId}`, input.value);
+        });
+        
+        // Load saved values
+        const saved = localStorage.getItem(`genbind_${inputId}`);
+        if (saved) {
+          input.value = saved;
+        }
+      }
+    });
+  }
+
+  updateInputPlaceholder(method, targetInput) {
+    const placeholders = {
+      target: "Enter protein target specifications:\n• Target name (e.g., 'EGFR kinase')\n• Binding site details\n• Mutation information\n• Selectivity requirements",
+      smiles: "Enter SMILES or SELFIES strings:\n• SMILES: CCO (ethanol)\n• SELFIES: [C][C][O]\n• Multiple structures (one per line)\n• Chemical constraints",
+      scaffold: "Enter scaffold structure:\n• Core structure SMILES\n• Substitution patterns\n• Bioisosteric groups\n• R-group variations",
+      pharmacophore: "Define pharmacophore features:\n• Hydrogen bond donors/acceptors\n• Hydrophobic regions\n• Aromatic centers\n• Distance constraints"
+    };
+    
+    targetInput.placeholder = placeholders[method] || placeholders.target;
+  }
+
+  async generateAdvancedMolecules() {
+    const generateBtn = document.getElementById('generate-btn');
+    const progressContainer = document.getElementById('progress-container');
+    const progressFill = document.getElementById('progress-fill');
+    const progressText = document.getElementById('progress-text');
+    const targetInput = document.getElementById('target-input').value.trim();
+    const numMolecules = parseInt(document.getElementById('num-molecules').value);
+
+    if (!targetInput) {
+      this.showNotification('Please enter target specifications or molecular constraints.', 'warning');
+      document.getElementById('target-input').focus();
+      return;
+    }
+
+    this.isGenerating = true;
+    
+    // Enhanced generation process
+    generateBtn.classList.add('loading');
+    generateBtn.innerHTML = '<span class="spinner"></span><span class="btn-text">Generating...</span>';
+    generateBtn.disabled = true;
+    progressContainer.style.display = 'block';
+
+    const progressSteps = [
+      'Initializing quantum molecular engine...',
+      'Loading AI model parameters...',
+      'Processing target specifications...',
+      'Exploring high-dimensional chemical space...',
+      'Generating molecular candidates...',
+      'Applying drug-likeness filters...',
+      'Calculating ADMET properties...',
+      'Optimizing binding affinities...',
+      'Validating chemical structures...',
+      'Finalizing molecular library...'
+    ];
+
+    let progress = 0;
+    for (let i = 0; i < progressSteps.length; i++) {
+      progressText.textContent = progressSteps[i];
+      progress = ((i + 1) / progressSteps.length) * 100;
+      progressFill.style.width = progress + '%';
+      
+      // Variable timing for realistic feel
+      const delay = i < 3 ? 600 : i < 7 ? 800 : 1000;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+
+    // Generate enhanced molecules with realistic data
+    this.generatedMolecules = this.generateEnhancedMockMolecules(numMolecules, targetInput);
+    this.selectedMoleculeIndex = 0;
+    this.renderEnhancedGeneratedMolecules();
+    this.updateEnhancedVisualization();
+
+    // Success animation
+    progressText.textContent = `Successfully generated ${numMolecules} molecular candidates!`;
+    generateBtn.classList.remove('loading');
+    generateBtn.classList.add('success-glow');
+    generateBtn.innerHTML = '<i class="fas fa-check"></i><span class="btn-text">Generation Complete!</span>';
+    
+    setTimeout(() => {
+      generateBtn.classList.remove('success-glow');
+      generateBtn.innerHTML = '<i class="fas fa-magic"></i><span class="btn-text">Generate New Batch</span>';
+      generateBtn.disabled = false;
+      progressContainer.style.display = 'none';
+      progressFill.style.width = '0%';
+      this.isGenerating = false;
+    }, 2000);
+
+    this.showNotification(`Generated ${numMolecules} high-quality molecular candidates!`, 'success');
+  }
+
+  generateEnhancedMockMolecules(count, target) {
+    // Enhanced molecular database with realistic pharmaceutical compounds
+    const sampleMolecules = [
+      {
+        smiles: "CC(C)(C)OC(=O)N1CCC(CC1)C(=O)N2CCC(CC2)C(=O)O",
+        name: "Advanced EGFR Inhibitor Candidate",
+        mw: 384.47,
+        logp: 2.34,
+        hbd: 1,
+        hba: 6,
+        rotatable_bonds: 7,
+        tpsa: 72.19,
+        binding_affinity: -8.7,
+        drug_likeness: 0.89,
+        synthesis_accessibility: 3.2,
+        admet_score: 0.76,
+        selectivity_score: 0.84,
+        novelty: 0.72
+      },
+      {
+        smiles: "COc1ccc(cc1)C(=O)Nc2ccc3c(c2)nc(n3CCN(C)C)c4ccccc4",
+        name: "Multi-kinase Selective Inhibitor",
+        mw: 417.49,
+        logp: 3.82,
+        hbd: 1,
+        hba: 5,
+        rotatable_bonds: 6,
+        tpsa: 62.41,
+        binding_affinity: -9.2,
+        drug_likeness: 0.94,
+        synthesis_accessibility: 4.1,
+        admet_score: 0.81,
+        selectivity_score: 0.91,
+        novelty: 0.85
+      },
+      {
+        smiles: "Cc1ccc(cc1)S(=O)(=O)N2CCN(CC2)C(=O)c3ccc(cc3)F",
+        name: "CNS-Penetrant Modulator",
+        mw: 378.43,
+        logp: 2.87,
+        hbd: 0,
+        hba: 5,
+        rotatable_bonds: 4,
+        tpsa: 61.05,
+        binding_affinity: -8.1,
+        drug_likeness: 0.91,
+        synthesis_accessibility: 2.8,
+        admet_score: 0.73,
+        selectivity_score: 0.77,
+        novelty: 0.68
+      },
+      {
+        smiles: "CN1CCN(CC1)C(=O)c2ccc(cc2)N3CCOCC3",
+        name: "Oral Bioavailable Lead",
+        mw: 303.36,
+        logp: 1.45,
+        hbd: 0,
+        hba: 5,
+        rotatable_bonds: 3,
+        tpsa: 44.81,
+        binding_affinity: -7.8,
+        drug_likeness: 0.87,
+        synthesis_accessibility: 2.1,
+        admet_score: 0.89,
+        selectivity_score: 0.69,
+        novelty: 0.54
+      },
+      {
+        smiles: "CC(C)Nc1nc(nc(n1)N2CCOCC2)c3ccc(cc3)Cl",
+        name: "Precision Therapeutic Candidate",
+        mw: 350.83,
+        logp: 3.21,
+        hbd: 1,
+        hba: 6,
+        rotatable_bonds: 4,
+        tpsa: 62.84,
+        binding_affinity: -8.5,
+        drug_likeness: 0.92,
+        synthesis_accessibility: 3.7,
+        admet_score: 0.79,
+        selectivity_score: 0.88,
+        novelty: 0.76
+      }
+    ];
+
+    const molecules = [];
+    for (let i = 0; i < count; i++) {
+      const base = sampleMolecules[i % sampleMolecules.length];
+      const variation = {
+        ...base,
+        id: `mol_adv_${i + 1}`,
+        name: `${base.name} Variant ${i + 1}`,
+        mw: Math.max(150, base.mw + (Math.random() - 0.5) * 100),
+        logp: base.logp + (Math.random() - 0.5) * 2,
+        binding_affinity: base.binding_affinity + (Math.random() - 0.5) * 2,
+        drug_likeness: Math.max(0.4, Math.min(0.98, base.drug_likeness + (Math.random() - 0.5) * 0.3)),
+        admet_score: Math.max(0.3, Math.min(0.95, base.admet_score + (Math.random() - 0.5) * 0.3)),
+        selectivity_score: Math.max(0.4, Math.min(0.95, base.selectivity_score + (Math.random() - 0.5) * 0.2)),
+        novelty: Math.max(0.3, Math.min(0.95, base.novelty + (Math.random() - 0.5) * 0.3)),
+        confidence: Math.random() * 0.3 + 0.7
+      };
+      molecules.push(variation);
+    }
+
+    // Sort by binding affinity (best first)
+    return molecules.sort((a, b) => b.binding_affinity - a.binding_affinity);
+  }
+
+  renderEnhancedGeneratedMolecules() {
+    const resultsGrid = document.getElementById('results-grid');
+    
+    if (this.generatedMolecules.length === 0) {
+      resultsGrid.innerHTML = `
+        <div class="results-empty">
+          <i class="fas fa-atom"></i>
+          <h3>Advanced Molecular Generation Ready</h3>
+          <p>Select your AI model, configure parameters, and begin generating revolutionary drug candidates</p>
+        </div>
+      `;
+      return;
+    }
+
+    resultsGrid.innerHTML = this.generatedMolecules.map((molecule, index) => {
+      const scoreClass = molecule.binding_affinity <= -9 ? 'excellent' : 
+                        molecule.binding_affinity <= -8 ? 'good' :
+                        molecule.binding_affinity <= -7 ? 'moderate' : 'poor';
+      
+      return `
+        <div class="molecule-card ${index === this.selectedMoleculeIndex ? 'selected' : ''}" 
+             data-index="${index}">
+          <div class="molecule-header">
+            <div>
+              <div class="molecule-smiles">${molecule.smiles}</div>
+              <div style="font-size: 1rem; font-weight: 600; color: var(--text-accent); margin-top: 0.5rem;">
+                ${molecule.name}
+              </div>
+            </div>
+            <div class="molecule-score ${scoreClass}">
+              ${molecule.binding_affinity.toFixed(1)} kcal/mol
+            </div>
+          </div>
+          
+          <div class="molecule-properties">
+            <div class="property-item">
+              <span class="property-label">MW</span>
+              <span class="property-value">${molecule.mw.toFixed(1)}</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">LogP</span>
+              <span class="property-value">${molecule.logp.toFixed(2)}</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">HBD</span>
+              <span class="property-value">${molecule.hbd}</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">HBA</span>
+              <span class="property-value">${molecule.hba}</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">TPSA</span>
+              <span class="property-value">${molecule.tpsa.toFixed(1)}</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">Drug-like</span>
+              <span class="property-value">${(molecule.drug_likeness * 100).toFixed(0)}%</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">ADMET</span>
+              <span class="property-value">${(molecule.admet_score * 100).toFixed(0)}%</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">Selectivity</span>
+              <span class="property-value">${(molecule.selectivity_score * 100).toFixed(0)}%</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">Novelty</span>
+              <span class="property-value">${(molecule.novelty * 100).toFixed(0)}%</span>
+            </div>
+            <div class="property-item">
+              <span class="property-label">Synthesis</span>
+              <span class="property-value">${molecule.synthesis_accessibility.toFixed(1)}</span>
+            </div>
+          </div>
+          
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+              Confidence: ${(molecule.confidence * 100).toFixed(0)}%
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+              <button class="control-btn" onclick="genBindPlatform.exportMolecule(${index})" title="Export Structure">
+                <i class="fas fa-download"></i>
+              </button>
+              <button class="control-btn" onclick="genBindPlatform.analyzeMolecule(${index})" title="Detailed Analysis">
+                <i class="fas fa-chart-line"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Add click handlers with enhanced animations
+    resultsGrid.querySelectorAll('.molecule-card').forEach((card, index) => {
+      card.addEventListener('click', () => {
+        this.selectedMoleculeIndex = index;
+        this.renderEnhancedGeneratedMolecules();
+        this.updateEnhancedVisualization();
+        
+        // Smooth scroll to visualization
+        document.getElementById('visualization-container').scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'center'
+        });
+      });
+    });
+  }
+
+  updateEnhancedVisualization() {
+    const container = document.getElementById('visualization-container');
+    
+    if (this.generatedMolecules.length === 0 || this.selectedMoleculeIndex === null) {
+      container.innerHTML = `
+        <div class="visualization-placeholder">
+          <div class="visualization-icon">
+            <i class="fas fa-cube"></i>
+          </div>
+          <div class="visualization-text">
+            Advanced 3D Molecular Structure Viewer
+          </div>
+          <p class="visualization-description">
+            Select a generated molecule to visualize its 3D structure, binding interactions, and pharmacophoric features using our quantum-enhanced molecular renderer
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    const molecule = this.generatedMolecules[this.selectedMoleculeIndex];
+    
+    container.innerHTML = `
+      <div class="molecular-viewer">
+        <div class="viewer-controls">
+          <button class="control-btn" title="Reset View"><i class="fas fa-home"></i></button>
+          <button class="control-btn" title="Rotate"><i class="fas fa-sync-alt"></i></button>
+          <button class="control-btn" title="Fullscreen"><i class="fas fa-expand"></i></button>
+        </div>
+        
+        <div style="display: flex; height: 100%; align-items: center; justify-content: center;">
+          <div style="text-align: center; max-width: 600px;">
+            <div style="font-size: 2rem; font-weight: 800; margin-bottom: 1rem; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              ${molecule.name}
+            </div>
+            
+            <div style="background: var(--dark-card); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; border: 2px solid var(--glass-border);">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                <div style="text-align: left;">
+                  <h4 style="color: var(--primary); margin-bottom: 1rem;">Molecular Formula</h4>
+                  <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; color: var(--text-primary); word-break: break-all;">
+                    ${molecule.smiles}
+                  </div>
+                </div>
+                
+                <div style="text-align: left;">
+                  <h4 style="color: var(--primary); margin-bottom: 1rem;">Key Metrics</h4>
+                  <div style="display: grid; gap: 0.5rem; font-size: 0.95rem;">
+                    <div><strong>Binding Affinity:</strong> <span style="color: var(--success);">${molecule.binding_affinity.toFixed(2)} kcal/mol</span></div>
+                    <div><strong>Drug-likeness:</strong> <span style="color: var(--primary);">${(molecule.drug_likeness * 100).toFixed(1)}%</span></div>
+                    <div><strong>ADMET Score:</strong> <span style="color: var(--accent);">${(molecule.admet_score * 100).toFixed(1)}%</span></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="text-align: center; padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px;">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--primary);">${molecule.mw.toFixed(0)}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">MW (Da)</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(6, 182, 212, 0.1); border-radius: 8px;">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--accent);">${molecule.logp.toFixed(1)}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">LogP</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--success);">${molecule.tpsa.toFixed(0)}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">TPSA</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(139, 92, 246, 0.1); border-radius: 8px;">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--secondary);">${(molecule.selectivity_score * 100).toFixed(0)}%</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Selectivity</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">
+                  <div style="font-size: 1.2rem; font-weight: 800; color: var(--warning);">${molecule.synthesis_accessibility.toFixed(1)}</div>
+                  <div style="font-size: 0.8rem; color: var(--text-muted);">Synthesis</div>
+                </div>
+              </div>
+              
+              <div style="color: var(--text-secondary); font-size: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--glass-border);">
+                <i class="fas fa-cube" style="color: var(--primary);"></i> 
+                3D molecular visualization with Three.js integration ready for deployment
+                <br>
+                <i class="fas fa-chart-line" style="color: var(--accent);"></i> 
+                Interactive property analysis and binding site visualization available
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Enhanced placeholder sections with "Coming Soon" badges
+  renderAdvancedDockingStudio() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card" style="position: relative;">
+          <div class="coming-soon-badge">Coming Q2 2025</div>
+          <h1 class="section-title">Advanced Protein-Ligand Docking Studio</h1>
+          <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.6;">
+            Revolutionary molecular docking engine with quantum-enhanced binding affinity prediction and multi-conformational analysis
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-dna"></i></div>
+              <div class="stat-value">99.3%</div>
+              <div class="stat-label">Binding Accuracy</div>
+              <div class="stat-description">Crystal structure validation</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-clock"></i></div>
+              <div class="stat-value">< 30s</div>
+              <div class="stat-label">Docking Time</div>
+              <div class="stat-description">Per protein-ligand pair</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-server"></i></div>
+              <div class="stat-value">50,000+</div>
+              <div class="stat-label">Protein Targets</div>
+              <div class="stat-description">Validated structures</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 4rem; color: var(--text-muted); background: rgba(59, 130, 246, 0.05); border-radius: 20px; border: 2px dashed var(--primary);">
+            <i class="fas fa-dna" style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.5; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary);">Advanced Docking Engine in Development</h3>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Multi-scale molecular dynamics simulation with AI-powered pose prediction and allosteric site identification</p>
+            
+            <div style="margin-top: 2rem; display: flex; justify-content: center; gap: 1rem;">
+              <span class="example-chip">AutoDock Vina Integration</span>
+              <span class="example-chip">Schrödinger Glide</span>
+              <span class="example-chip">OpenEye OMEGA</span>
+              <span class="example-chip">Custom AI Engine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderAdvancedChemicalExplorer() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card" style="position: relative;">
+          <div class="coming-soon-badge">Beta Q1 2025</div>
+          <h1 class="section-title">Quantum Chemical Space Explorer</h1>
+          <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.6;">
+            Navigate and analyze vast chemical spaces with AI-powered visualization, similarity mapping, and patent landscape analysis
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-search-plus"></i></div>
+              <div class="stat-value">10^60</div>
+              <div class="stat-label">Chemical Space</div>
+              <div class="stat-description">Theoretically possible compounds</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-map"></i></div>
+              <div class="stat-value">2.1B</div>
+              <div class="stat-label">Mapped Molecules</div>
+              <div class="stat-description">High-dimensional visualization</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+              <div class="stat-value">847K</div>
+              <div class="stat-label">Patent Records</div>
+              <div class="stat-description">IP landscape analysis</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 4rem; color: var(--text-muted); background: rgba(6, 182, 212, 0.05); border-radius: 20px; border: 2px dashed var(--accent);">
+            <i class="fas fa-search-plus" style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.5; background: var(--gradient-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary);">Interactive Chemical Space Navigation</h3>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">t-SNE and UMAP projections with real-time similarity clustering and competitive intelligence</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderAdvancedDrugPipeline() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card" style="position: relative;">
+          <div class="coming-soon-badge">Enterprise 2025</div>
+          <h1 class="section-title">AI-Driven Drug Development Pipeline</h1>
+          <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.6;">
+            Comprehensive lifecycle management from hit identification to clinical development with predictive analytics and risk assessment
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+              <div class="stat-value">73%</div>
+              <div class="stat-label">Success Prediction</div>
+              <div class="stat-description">Phase II/III accuracy</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+              <div class="stat-value">4.2yr</div>
+              <div class="stat-label">Time Reduction</div>
+              <div class="stat-description">Average development cycle</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+              <div class="stat-value">$847M</div>
+              <div class="stat-label">Cost Savings</div>
+              <div class="stat-description">Per successful drug</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 4rem; color: var(--text-muted); background: rgba(139, 92, 246, 0.05); border-radius: 20px; border: 2px dashed var(--secondary);">
+            <i class="fas fa-chart-line" style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.5; background: var(--gradient-secondary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary);">Enterprise Pipeline Management</h3>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Advanced project tracking with ML-powered success prediction and regulatory pathway optimization</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderAdvancedAnalyticsDashboard() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card" style="position: relative;">
+          <div class="coming-soon-badge">Pro Feature</div>
+          <h1 class="section-title">Advanced Analytics & Intelligence Dashboard</h1>
+          <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.6;">
+            Comprehensive analytics platform with real-time insights, publication-ready visualizations, and competitive intelligence
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
+              <div class="stat-value">847</div>
+              <div class="stat-label">KPIs Tracked</div>
+              <div class="stat-description">Real-time monitoring</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-file-export"></i></div>
+              <div class="stat-value">15+</div>
+              <div class="stat-label">Export Formats</div>
+              <div class="stat-description">Publication ready</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-robot"></i></div>
+              <div class="stat-value">AI-Powered</div>
+              <div class="stat-label">Insights</div>
+              <div class="stat-description">Predictive analytics</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 4rem; color: var(--text-muted); background: rgba(16, 185, 129, 0.05); border-radius: 20px; border: 2px dashed var(--success);">
+            <i class="fas fa-chart-bar" style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.5; background: var(--gradient-success); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary);">Comprehensive Analytics Suite</h3>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Advanced reporting with ML insights, trend analysis, and competitive benchmarking for data-driven decision making</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  renderAdvancedResearchPortal() {
+    const content = document.getElementById('main-section-content');
+    content.innerHTML = `
+      <div class="fade-in">
+        <div class="glass-card" style="position: relative;">
+          <div class="coming-soon-badge">Collaboration Hub</div>
+          <h1 class="section-title">Global Research Collaboration Portal</h1>
+          <p style="font-size: 1.3rem; color: var(--text-secondary); margin-bottom: 3rem; line-height: 1.6;">
+            Connect with researchers worldwide, share data securely, and accelerate collaborative drug discovery projects
+          </p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 3rem 0;">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-users"></i></div>
+              <div class="stat-value">${this.platformStats.active_researchers}</div>
+              <div class="stat-label">Active Researchers</div>
+              <div class="stat-description">Global network</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-book-open"></i></div>
+              <div class="stat-value">${this.platformStats.publications}</div>
+              <div class="stat-label">Publications</div>
+              <div class="stat-description">Peer-reviewed research</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fas fa-handshake"></i></div>
+              <div class="stat-value">847</div>
+              <div class="stat-label">Collaborations</div>
+              <div class="stat-description">Active projects</div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 4rem; color: var(--text-muted); background: rgba(245, 158, 11, 0.05); border-radius: 20px; border: 2px dashed var(--warning);">
+            <i class="fas fa-users" style="font-size: 5rem; margin-bottom: 2rem; opacity: 0.5; background: var(--gradient-warning); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></i>
+            <h3 style="font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-secondary);">Global Scientific Collaboration</h3>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">Secure data sharing, project management, and peer review systems for accelerated drug discovery research</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Enhanced utility functions
+  exportMolecule(index) {
+    const molecule = this.generatedMolecules[index];
+    const data = {
+      name: molecule.name,
+      smiles: molecule.smiles,
+      properties: {
+        molecular_weight: molecule.mw,
+        logp: molecule.logp,
+        binding_affinity: molecule.binding_affinity,
+        drug_likeness: molecule.drug_likeness,
+        admet_score: molecule.admet_score,
+        synthesis_accessibility: molecule.synthesis_accessibility
+      },
+      generated_by: "GenBind AI Platform",
+      timestamp: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${molecule.name.replace(/\s+/g, '_')}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    this.showNotification(`Exported ${molecule.name} structure data`, 'success');
+  }
+
+  analyzeMolecule(index) {
+    const molecule = this.generatedMolecules[index];
+    this.showNotification(`Detailed analysis for ${molecule.name} - Feature coming soon!`, 'info');
+  }
+
+  showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 2px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      z-index: 10000;
+      max-width: 400px;
+      box-shadow: var(--shadow-xl);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      font-weight: 600;
+    `;
+    
+    const colors = {
+      success: 'var(--success)',
+      warning: 'var(--warning)',
+      error: 'var(--danger)',
+      info: 'var(--primary)'
+    };
+    
+    notification.style.borderLeftColor = colors[type];
+    notification.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'error' ? 'times-circle' : 'info-circle'}" 
+           style="color: ${colors[type]};"></i>
+        ${message}
+      </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => {
+      notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Hide notification
+    setTimeout(() => {
+      notification.style.transform = 'translateX(100%)';
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 4000);
+  }
+}
+
+// Initialize the enhanced platform
+let genBindPlatform;
+window.addEventListener('DOMContentLoaded', () => {
+  genBindPlatform = new GenBindAdvancedPlatform();
+});
+
+// Enhanced keyboard shortcuts
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey) {
+    switch(e.key) {
+      case '1':
+        e.preventDefault();
+        document.querySelector('[data-page="generator"]').click();
+        break;
+      case '2':
+        e.preventDefault();
+        document.querySelector('[data-page="docking"]').click();
+        break;
+      case '3':
+        e.preventDefault();
+        document.querySelector('[data-page="explorer"]').click();
+        break;
+    }
+  }
+});
+</script>
+</body>
+</html>
